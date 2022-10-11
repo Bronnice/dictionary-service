@@ -1,25 +1,26 @@
-import java.io.FileNotFoundException;
+import Dictionary.Dictionary;
+
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        Dictionary dic = new Dictionary();
+    public static void main(String[] args){
+        Dictionary dictionary = new Dictionary("C:\\Users\\Константин\\Documents\\Учёба\\Java\\dictionary-service", "dic");
 
-        dic.addIssue("Word1", "value1");
-        dic.addIssue("Word2", "value2");
-        dic.addIssue("Word3", "value3");
-        dic.addIssue("Word4", "value4");
+        dictionary.dataSource.addIssue("Word1", "value1");
+        dictionary.dataSource.addIssue("Word2", "value2");
+        dictionary.dataSource.addIssue("Word3", "value3");
+        dictionary.dataSource.addIssue("Word4", "value4");
 
-        System.out.println(dic.readFromFile());
-        System.out.println(dic.getDictionary());
+        System.out.println(dictionary.dataSource.readFromFile("Word1"));
+        System.out.println(dictionary.dataSource.readFromFile("Word2"));
+        System.out.println(dictionary.dataSource.readFromFile("Word3"));
+        System.out.println(dictionary.dataSource.readFromFile("Word4"));
 
-        dic.deleteIssue("Word2");
-        dic.deleteIssue("Word5");
+        System.out.println(dictionary.dataSource.findByKey("Word3"));
+        System.out.println(dictionary.dataSource.findByKey("Word5"));
 
-        System.out.println(dic.readFromFile());
-        System.out.println(dic.getDictionary());
-
-        System.out.println(dic.findByKey("Word1"));
-        System.out.println(dic.findByKey("Word2"));
+        dictionary.dataSource.deleteIssue("Word2");
+        System.out.println(dictionary.dataSource.findByKey("Word2"));
+        System.out.println(dictionary.dataSource.readFromFile("Word2"));
     }
 }

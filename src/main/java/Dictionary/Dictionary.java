@@ -6,8 +6,8 @@ public class Dictionary{
 
     public DataSource dataSource;
 
-    public Dictionary(String path, String fileName){
+    public Dictionary(String path, String fileName, Validator validator){
         final File file = new File(path, (fileName + ".json"));
-        this.dataSource = new DataSource(file);
+        this.dataSource = new DataSource(file, validator);
     }
 }

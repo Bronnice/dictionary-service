@@ -2,7 +2,7 @@ import Dictionary.*;
 
 public class Main {
     public static void main(String[] args){
-        Validator validator1 = new Validator(6, WordType.EnglishWithNums);
+        Validator validator1 = new ValidatorImpl(6, WordType.EnglishWithNums);
         Dictionary dictionary = new Dictionary("C:\\Users\\Константин\\Documents\\Учёба\\Java\\dictionary-service", "dic", validator1);
 
         dictionary.dataSource.addIssue("Word1", "value1");

@@ -6,19 +6,19 @@ import java.io.*;
 import java.util.HashMap;
 
 public class DataSource {
-    private HashMap<String, String> dictionary = new HashMap<>();
+    private HashMap<String, String> dictionaryMap = new HashMap<>();
     private final File file;
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gson = builder.create();
-    private Validator validator;
+    private Dictionary dictionary;
 
-    public DataSource(File file, Validator validator) {
+    public DataSource(File file, Dictionary dictionary) {
         this.file = file;
-        this.validator = validator;
+        this.dictionary = dictionary;
     }
 
     private boolean checkWordType(String string) {
-        switch (validator.getWordType()) {
+        switch (dictionary.getValidator().getWordType()) {
             case EnglishWithNums -> {
                 string.matches("[a-zA-Z0-9]");
                 return true;
@@ -39,9 +39,12 @@ public class DataSource {
 
     public void addIssue(String key, String value) {
         try (FileWriter fw = new FileWriter(file.getName())) {
-            if (key.length() <= validator.getWordCount() && checkWordType(key) && checkWordType(value) && !dictionary.containsKey(key)) {
-                dictionary.put(key, value);
-                fw.write(gson.toJson(dictionary));
+            if (key.length() <= dictionary.getValidator().getWordCount()
+                    && checkWordType(key)
+                    && checkWordType(value)
+                    && !dictionaryMap.containsKey(key)) {
+                dictionaryMap.put(key, value);
+                fw.write(gson.toJson(dictionaryMap));
             } else
                 throw new UnsupportedOperationException();
         } catch (Exception e) {
@@ -51,9 +54,9 @@ public class DataSource {
 
     public void deleteIssue(String key) {
         try (FileWriter fw = new FileWriter(file.getName())) {
-            if (dictionary.containsKey(key)) {
-                dictionary.remove(key);
-                fw.write(gson.toJson(dictionary));
+            if (dictionaryMap.containsKey(key)) {
+                dictionaryMap.remove(key);
+                fw.write(gson.toJson(dictionaryMap));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +66,7 @@ public class DataSource {
     private void readAllFromFile(){
         try {
             BufferedReader br = new BufferedReader(new FileReader(file.getName()));
-            dictionary = gson.fromJson(br, HashMap.class);
+            dictionaryMap = gson.fromJson(br, HashMap.class);
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,9 +76,9 @@ public class DataSource {
     public String readCoupleFromFile(String key) {
         try {
             this.readAllFromFile();
-            if (dictionary.containsKey(key)) {
+            if (dictionaryMap.containsKey(key)) {
                 HashMap<String, String> tempMap = new HashMap<>();
-                tempMap.put(key, dictionary.get(key));
+                tempMap.put(key, dictionaryMap.get(key));
                 return gson.toJson(tempMap);
             }
             else
@@ -87,6 +90,6 @@ public class DataSource {
 
     public boolean findByKey(String key) {
         this.readAllFromFile();
-        return dictionary.containsKey(key);
+        return dictionaryMap.containsKey(key);
     }
 }
